@@ -15,5 +15,11 @@ The model revolves aroung the following:
 	a. The total number of functional waterpoints across all villages
 	b. A key value pair linking a community to its model structure representing water points
 	c. utility methods to compute the number of water points per community and the percentage ranking. This is computed as it varies given the json data received from the feed
+5. JUnit tests to have test cases running against the project methods.
+
+
+	
+	
+
 
 
