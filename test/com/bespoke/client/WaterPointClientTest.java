@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
@@ -16,11 +17,12 @@ import org.junit.Test;
 
 import com.bespoke.exceptions.BadWaterFeedURLException;
 import com.bespoke.exceptions.WaterFeedException;
+import com.bespoke.model.CommunityWaterPointsData;
 import com.bespoke.model.WaterPointsData;
 
 public class WaterPointClientTest {
 
-	String url = "http://localhost:8082/waterpoint/api/waterfeed";
+	String url = "http://waterpoints-greid.rhcloud.com/api/waterfeed";
 	WaterPointClient client = new WaterPointClient();
 
 	@Test
@@ -33,7 +35,20 @@ public class WaterPointClientTest {
 			JSONArray array = new JSONArray(data);
 			assertNotNull(array);
 			System.out.println("Number of water points: " + array.length());
+
 			wpd = client.calculate(data);
+			System.out.printf("Number of functional water points: %s \n", wpd.getNumberFunctional());
+			// print out the water points
+			Map<String, CommunityWaterPointsData> points = wpd
+					.getWaterpointsCount();
+			System.out.println("\nNumber of water points per Community:\n");
+			wpd.displayCommunityWaterpoints(points);
+
+			System.out
+					.println("\nRank of water points per Community by percentage of broken points :\n");
+			System.out.printf("%2s. %-15s %s\n", "No", "Community",
+					"Perc broken");
+			wpd.displayCommunityRank(points);
 		} catch (WaterFeedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +87,7 @@ public class WaterPointClientTest {
 	public void testReadBuffer() {
 		// forn a URL object to help us access the web service
 		URL urlTest;
-		String testResult=null;
+		String testResult = null;
 		// Use HTTPConnection to open a connection to hte URL
 		HttpURLConnection connection;
 		try {
